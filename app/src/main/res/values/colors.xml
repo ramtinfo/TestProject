@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#435265</color>
+    <color name="colorPrimaryDark">#34465b</color>
+    <color name="colorAccent">#ff5667</color>
+    <!--card color-->
+    <color name="voilet">#6375f8</color>
+    <color name="orange">#ff724e</color>
+    <color name="light_green">#00cbb5</color>
+    <color name="green">#00cf7a</color>
+    <color name="yellow">#99fdaf50</color>
+    <color name="blue">#1e78ef</color>
+    <color name="light_blue">#00bef3</color>
+    <color name="pink">#e557f8</color>
+    <color name="red">#ff5163</color>
+    <color name="blue_shades">#00d4e1</color>
+    <color name="disabled">#818c99</color>
+    <color name="dark_background">#262626</color>
+</resources>
