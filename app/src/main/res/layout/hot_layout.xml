@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="2dp"
     app:cardCornerRadius="5dp"
+    app:cardBackgroundColor="@color/cardview_dark_background"
     app:cardElevation="2dp">
 
     <LinearLayout
@@ -17,8 +18,8 @@
             android:layout_height="wrap_content"
             android:fontFamily="serif"
             android:padding="10dp"
-            android:text="UPSSSC Yuva Vikas Adhikari Online Form 2018"
-            android:textColor="#000000"
+            android:text="SSC CPO SI 2018 Apply Online"
+            android:textColor="#FFF"
             android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>
