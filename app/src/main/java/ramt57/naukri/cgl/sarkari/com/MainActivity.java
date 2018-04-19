@@ -2,6 +2,7 @@ package ramt57.naukri.cgl.sarkari.com;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.UriMatcher;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import com.thefinestartist.finestwebview.FinestWebView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -22,15 +25,16 @@ import java.util.ArrayList;
 
 import ramt57.naukri.cgl.sarkari.com.adapter.HotAdapter;
 import ramt57.naukri.cgl.sarkari.com.adapter.Marquee_Adapter;
+import ramt57.naukri.cgl.sarkari.com.pojo.LinkPojo;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private final String TAG = "HTML";
     RecyclerView marquee_recycler, hot_recycler;
     Marquee_Adapter marquee_adapter;
     HotAdapter hotAdapter;
-    ArrayList<String> hot_titles = new ArrayList<>();
-    ArrayList<String> marquee_titles = new ArrayList<>();
-    CardView syllabus, answer_key, latest_job, admit_card, result, about, certificate, important, admission;
+    ArrayList<LinkPojo> hot_titles = new ArrayList<>();
+    ArrayList<LinkPojo> marquee_titles = new ArrayList<>();
+    CardView syllabus, answer_key, latest_job, admit_card, result, about, admission;
     ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +66,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         about.setOnClickListener(this);
         admission = findViewById(R.id.admission);
         admission.setOnClickListener(this);
-        certificate = findViewById(R.id.certificate);
-        certificate.setOnClickListener(this);
-        important = findViewById(R.id.important);
-        important.setOnClickListener(this);
+//        certificate = findViewById(R.id.certificate);
+//        certificate.setOnClickListener(this);
+//        important = findViewById(R.id.important);
+//        important.setOnClickListener(this);
     }
 
     @Override
@@ -79,9 +83,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.about:
-                Intent intent1=new Intent(this,DetailListActivity.class);
-                intent1.putExtra("TITLE","About");
-                intent1.putExtra("URL","");
+                Intent intent1=new Intent(this,AboutActivity.class);
                 startActivity(intent1);
                 break;
             case R.id.admission:
@@ -107,18 +109,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent5.putExtra("TITLE","Admit Card");
                 intent5.putExtra("URL","http://www.sarkariresult.com/admitcard.php");
                 startActivity(intent5);
-                break;
-            case R.id.certificate:
-                Intent intent6=new Intent(this,DetailListActivity.class);
-                intent6.putExtra("TITLE","Verify Certificate");
-                intent6.putExtra("URL","");
-                startActivity(intent6);
-                break;
-            case R.id.important:
-                Intent intent7=new Intent(this,DetailListActivity.class);
-                intent7.putExtra("TITLE","Important");
-                intent7.putExtra("URL","");
-                startActivity(intent7);
                 break;
             case R.id.result:
                 Intent intent8=new Intent(this,DetailListActivity.class);
@@ -148,22 +138,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             for (int i = 1; i <= 8; i++) {
                 Elements tableparse = document.select("table #image" + i + " a");
                 for (Element tr : tableparse) {
+                    LinkPojo linkPojo=new LinkPojo();
                     Log.w(TAG, tr.text() + " 2 " + tr.absUrl("href"));
-                    hot_titles.add(tr.text().replace("Apply Online", ""));
+                    linkPojo.setTitle(tr.text().replace("Apply Online","")+"");
+                    linkPojo.setLink(tr.absUrl("href"));
+                    hot_titles.add(linkPojo);
                 }
             }
             hotAdapter = new HotAdapter(hot_titles);
             hot_recycler.setAdapter(hotAdapter);
-            Elements newsHeadlines = document.select("#marquee1 marquee a b");
+
+            Elements newsHeadlines = document.select("#marquee1 marquee a");
             for (Element headline : newsHeadlines) {
-//            log("%s\n\t%s",
-//                    headline.attr("title"), headline.absUrl("href"));
-                marquee_titles.add(headline.text());
-                Log.d(TAG, headline.text() + " " + headline.absUrl("href"));
+                LinkPojo pojo=new LinkPojo();
+                pojo.setTitle(headline.text()+"");
+                pojo.setLink(headline.absUrl("href")+"");
+                marquee_titles.add(pojo);
+                Log.d(TAG, headline.text() + " fuck " + headline.absUrl("href"));
             }
             marquee_adapter = new Marquee_Adapter(marquee_titles);
             marquee_adapter.notifyDataSetChanged();
             marquee_recycler.setAdapter(marquee_adapter);
+            hotAdapter.setHotclicklistner(new HotAdapter.HOTClick() {
+                @Override
+                public void onClick(String URl) {
+                    new FinestWebView.Builder(MainActivity.this).show(URl);
+                }
+            });
+            marquee_adapter.setMarqueeclicklistner(new Marquee_Adapter.MarqueeClick() {
+                @Override
+                public void onClick(String URl) {
+                    new FinestWebView.Builder(MainActivity.this).show(URl);
+                }
+            });
         }
 
         @Override

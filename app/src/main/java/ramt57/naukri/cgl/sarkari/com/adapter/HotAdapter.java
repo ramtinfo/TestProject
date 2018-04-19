@@ -10,11 +10,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import ramt57.naukri.cgl.sarkari.com.R;
+import ramt57.naukri.cgl.sarkari.com.pojo.LinkPojo;
 
 public class HotAdapter extends RecyclerView.Adapter<HotAdapter.HotViewHolder> {
-    ArrayList<String> hotlist=new ArrayList<>();
-
-    public HotAdapter(ArrayList<String> temp){
+    private static ArrayList<LinkPojo> hotlist=new ArrayList<>();
+    private static HOTClick listner;
+    public HotAdapter(ArrayList<LinkPojo> temp){
         hotlist=temp;
     }
     @NonNull
@@ -26,7 +27,7 @@ public class HotAdapter extends RecyclerView.Adapter<HotAdapter.HotViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull HotViewHolder holder, int position) {
-        holder.title.setText(hotlist.get(position)+"");
+        holder.title.setText(hotlist.get(position).getTitle()+"");
     }
 
     @Override
@@ -39,6 +40,20 @@ public class HotAdapter extends RecyclerView.Adapter<HotAdapter.HotViewHolder> {
         public HotViewHolder(View itemView) {
             super(itemView);
             title=itemView.findViewById(R.id.title);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listner!=null){
+                        listner.onClick(hotlist.get(getAdapterPosition()).getLink()+"");
+                    }
+                }
+            });
         }
+    }
+    public void setHotclicklistner(HOTClick hotClick){
+        listner=hotClick;
+    }
+    public interface HOTClick{
+        void onClick(String URl);
     }
 }
